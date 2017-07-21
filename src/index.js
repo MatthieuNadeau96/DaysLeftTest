@@ -4,8 +4,8 @@ var Alexa = require("alexa-sdk"); //'amzn1.echo-sdk-ams.app.your-skill-id';
 
 exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
-    // alexa.appId = 'amzn1.ask.skill.fa9070f2-bc03-4778-9d5d-deb9543c773b';
-    alexa.dynamoDBTableName = 'DaysLeftTest';
+    alexa.appId = 'amzn1.ask.skill.fa9070f2-bc03-4778-9d5d-deb9543c773b';
+    alexa.dynamoDBTableName = 'DaysLeft';
     alexa.registerHandlers(handlers);
     alexa.execute();
 };
@@ -32,29 +32,27 @@ var DaysLeftIntro = [
 //         }
 //     },
 //     "AMAZON.StopIntent": function() {
-//       this.emit(':tell', "Goodbye!");
+//       // this.emit(':tell', "Goodbye!");
 //     },
 //     "AMAZON.CancelIntent": function() {
-//       this.emit(':tell', "Goodbye!");
+//       // this.emit(':tell', "Goodbye!");
 //     },
 //     'SessionEndedRequest': function () {
 //         console.log('session ended!');
 //         //this.attributes['endedSessionCount'] += 1;
-//         this.emit(":tell", "Goodbye!");
+//         // this.emit(":tell", "Goodbye!");
 //     }
 // };
 
 var handlers = {
   'LaunchRequest': function() {
-    if (!this.attributes['dateOfBirth']) {
+    // if (!this.attributes['dateOfBirth']) {
       this.emit(':ask', welcomeOutput);
-    } else {
-      this.emit('NewSession');
-    }
-  },
+    // } else {
+    //   console.log('THIS IS THE PROBLEM!!!');
+    },
   'DaysLeftIntent': function () {
-    this.emit('NewSession');
-
+    // this.emit('NewSession');
     var filledSlots = delegateSlotCollection.call(this);
     console.log(JSON.stringify(filledSlots));
     var speechOutput = randomPhrase(DaysLeftIntro);
@@ -62,44 +60,50 @@ var handlers = {
 //==============================================================================
 //===================================SLOTS======================================
 //==============================================================================
-
-    this.attributes['dateOfBirth']=filledSlots.slots.dateOfBirth.value;
+    var dateOfBirth=filledSlots.slots.dateOfBirth.value
+    console.log(dateOfBirth);
+    this.attributes['dateOfBirth'] = dateOfBirth;
     // this.attributes["dateOfBirth"];
-    this.attributes['weight']=filledSlots.slots.weight.value;
+    var weight=filledSlots.slots.weight.value;
+    this.attributes['weight'] = weight;
     // this.attributes["weight"];
-    this.attributes['exercise']=this.event.request.intent.slots.exercise.value;
+    var exercise=filledSlots.slots.exercise.value;
+    this.attributes['exercise'] = exercise;
     // this.attributes["exercise"];
-    this.attributes['smoke']=this.event.request.intent.slots.smoke.value;
+    var smoke=filledSlots.slots.smoke.value;
+    this.attributes['smoke'] = smoke;
     // this.attributes["smoke"];
-    this.attributes['drivingAccident']=this.event.request.intent.slots.drivingAccident.value;
+    var drivingAccident=filledSlots.slots.drivingAccident.value;
+    this.attributes['drivingAccident'] = drivingAccident;
     // this.attributes["drivingAccident"];
-    this.attributes['drivingDUI']=this.event.request.intent.slots.drivingDUI.value;
+    var drivingDUI=filledSlots.slots.drivingDUI.value;
+    this.attributes['drivingDUI'] = drivingDUI;
     // this.attributes["drivingDUI"];
 
 //==============================================================================
 //===============================SPEECH OUTPUTS=================================
 //==============================================================================
-    speechOutput += "You were born on " + this.attribute['dateOfBirth'];
-    speechOutput +=", you weigh " + this.attribute['weight'] + " pounds";
-    speechOutput +=", you exercise for about " + this.attribute['exercise'] + " hours per week";
+    speechOutput += "You were born on " + dateOfBirth;
+    speechOutput +=", you weigh " + weight + " pounds";
+    speechOutput +=", you exercise for about " + exercise + " hours per week";
 
                       // car accident condition
     if (drivingAccident == "none" || "I've never been in an accident" || "I've never been in a car accidnt" || 0) {
       speechOutput += ", you haven't been in any car accidents in the past three years";
     } else {
-      speechOutput += ", you've been in " + this.attribute['drivingAccident'] + " car accidents in the past three years";
+      speechOutput += ", you've been in " + drivingAccident + " car accidents in the past three years";
     };
                       // DUI condition
     if (drivingDUI == "none" || "I never drive under the influence" || 0) {
       speechOutput += ", you haven't had any DUI's";
     } else {
-      speechOutput += ", you've had " + this.attribute['drivingDUI'] + " DUI's";
+      speechOutput += ", you've had " + drivingDUI + " DUI's";
     };
                       //smoking condition
     if (smoke == 'none' || "I don't smoke" || 0) {
       speechOutput += ", and you don't smoke";
     } else {
-      speechOutput += ", and you smoke " + this.attribute['smoke'] + " packs a day";
+      speechOutput += ", and you smoke " + smoke + " packs a day";
     };
 
     speechOutput += ". You're still a loser though. And judging by your voice you sound like you don't have any friends at all."
@@ -171,17 +175,17 @@ function randomPhrase(array) {
   return(array[i]);
 
 }
-// function isSlotValid(request, slotName){
-//   var slot = request.intent.slot[slotName];
-//   var slotValue;
-//
-//   if (slot && slot.value) {
-//     slotValue = slot.value.toLowerCase();
-//     return slotValue;
-//   } else {
-//     return false;
-//   }
-// }
+function isSlotValid(request, slotName){
+  var slot = request.intent.slot[slotName];
+  var slotValue;
+
+  if (slot && slot.value) {
+    slotValue = slot.value.toLowerCase();
+    return slotValue;
+  } else {
+    return false;
+  }
+}
 
 // var newSessionHandlers = {
 //     'NewSession': function() {
