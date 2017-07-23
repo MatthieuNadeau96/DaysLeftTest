@@ -10,142 +10,99 @@ exports.handler = function(event, context, callback) {
     alexa.execute();
 };
 
-//==============================================================================
-//===========================TEXT STRINGS=======================================
-//==============================================================================
-
 var speechOutput;
-// var reprompt;
-var welcomeOutput = "Hello, do want to know when you die?";
+var reprompt = "Hi.";
+var welcomeOutput = "Hello, welcome to your very own, death calculator!" ;
 // var welcomeReprompt = "Say yes to continue or no to stop.";
 var DaysLeftIntro = [
   "Cool. ",
   "Great. ",
-  "Nice. "
+  "Nice. ",
+  "That's nice. ",
+  "Excellent. ",
+  "Thank you!. ",
+  "Splendid! ",
+  "Wow...Really? Well, okay then. "
 ];
 
-// var newSessionHandlers = {
-//     'NewSession': function() {
-//         if(Object.keys(this.attributes).length === 0) {
-//             this.attributes['endedSessionCount'] = 0;
-//             this.attributes['gamesPlayed'] = 0;
-//         }
-//     },
-//     "AMAZON.StopIntent": function() {
-//       // this.emit(':tell', "Goodbye!");
-//     },
-//     "AMAZON.CancelIntent": function() {
-//       // this.emit(':tell', "Goodbye!");
-//     },
-//     'SessionEndedRequest': function () {
-//         console.log('session ended!');
-//         //this.attributes['endedSessionCount'] += 1;
-//         // this.emit(":tell", "Goodbye!");
-//     }
-// };
 
 var handlers = {
   'LaunchRequest': function() {
-    // if (!this.attributes['dateOfBirth']) {
-      this.emit(':ask', welcomeOutput);
-    // } else {
-    //   console.log('THIS IS THE PROBLEM!!!');
-    },
+        if(Object.keys(this.attributes).length === 0) {
+            this.attributes['endedSessionCount'] = 0;
+            this.attributes['gamesPlayed'] = 0;
+          }
+          this.emit(':ask', welcomeOutput + " You've played "
+          + this.attributes['gamesPlayed'].toString()
+          + " times. Do want to know when you will die?");
+        },
   'DaysLeftIntent': function () {
-    // this.emit('NewSession');
-    var filledSlots = delegateSlotCollection.call(this);
-    console.log(JSON.stringify(filledSlots));
-    var speechOutput = randomPhrase(DaysLeftIntro);
+      this.emit(':ask', 'Okay...' + "I'm going to ask you a few questions to understand more about you.");
+      var filledSlots = delegateSlotCollection.call(this);
+      console.log(JSON.stringify(filledSlots));
+      var speechOutput = randomPhrase(DaysLeftIntro);
 
-//==============================================================================
-//===================================SLOTS======================================
-//==============================================================================
-    var dateOfBirth=filledSlots.slots.dateOfBirth.value
-    console.log(dateOfBirth);
-    this.attributes['dateOfBirth'] = dateOfBirth;
-    // this.attributes["dateOfBirth"];
-    var weight=filledSlots.slots.weight.value;
-    this.attributes['weight'] = weight;
-    // this.attributes["weight"];
-    var exercise=filledSlots.slots.exercise.value;
-    this.attributes['exercise'] = exercise;
-    // this.attributes["exercise"];
-    var smoke=filledSlots.slots.smoke.value;
-    this.attributes['smoke'] = smoke;
-    // this.attributes["smoke"];
-    var drivingAccident=filledSlots.slots.drivingAccident.value;
-    this.attributes['drivingAccident'] = drivingAccident;
-    // this.attributes["drivingAccident"];
-    var drivingDUI=filledSlots.slots.drivingDUI.value;
-    this.attributes['drivingDUI'] = drivingDUI;
-    // this.attributes["drivingDUI"];
-
-//==============================================================================
-//===============================SPEECH OUTPUTS=================================
-//==============================================================================
-    speechOutput += "You were born on " + dateOfBirth;
-    speechOutput +=", you weigh " + weight + " pounds";
-    speechOutput +=", you exercise for about " + exercise + " hours per week";
-
-                      // car accident condition
-    if (drivingAccident == "none" || "I've never been in an accident" || "I've never been in a car accidnt" || 0) {
-      speechOutput += ", you haven't been in any car accidents in the past three years";
-    } else {
-      speechOutput += ", you've been in " + drivingAccident + " car accidents in the past three years";
-    };
-                      // DUI condition
-    if (drivingDUI == "none" || "I never drive under the influence" || 0) {
-      speechOutput += ", you haven't had any DUI's";
-    } else {
-      speechOutput += ", you've had " + drivingDUI + " DUI's";
-    };
-                      //smoking condition
-    if (smoke == 'none' || "I don't smoke" || 0) {
-      speechOutput += ", and you don't smoke";
-    } else {
-      speechOutput += ", and you smoke " + smoke + " packs a day";
-    };
-
-    speechOutput += ". You're still a loser though. And judging by your voice you sound like you don't have any friends at all."
-
-//==============================================================================
-
-//==============================================================================
+      var dateOfBirth=filledSlots.slots.dateOfBirth.value
+      console.log(this.attributes['gamesPlayed']);
+      this.attributes['dateOfBirth'] = dateOfBirth;
+      // this.attributes["dateOfBirth"];
+      var weight=filledSlots.slots.weight.value;
+      this.attributes['weight'] = weight;
+      // this.attributes["weight"];
+      var exercise=filledSlots.slots.exercise.value;
+      this.attributes['exercise'] = exercise;
+      // this.attributes["exercise"];
+      var smoke=filledSlots.slots.smoke.value;
+      this.attributes['smoke'] = smoke;
+      // this.attributes["smoke"];
+      var drivingAccident=filledSlots.slots.drivingAccident.value;
+      this.attributes['drivingAccident'] = drivingAccident;
+      // this.attributes["drivingAccident"];
+      var drivingDUI=filledSlots.slots.drivingDUI.value;
+      this.attributes['drivingDUI'] = drivingDUI;
+      // this.attributes["drivingDUI"];
 
 
-    this.emit(":tell", speechOutput);
+      speechOutput += "You were born on " + dateOfBirth;
+      speechOutput +=", you weigh " + weight + " pounds";
+      speechOutput +=", you exercise for about " + exercise + " hours per week";
+
+                        // car accident condition
+      if (drivingAccident == "none" || "I've never been in an accident" || "I've never been in a car accidnt" || 0) {
+        speechOutput += ", you haven't been in any car accidents in the past three years";
+      } else {
+        speechOutput += ", you've been in " + drivingAccident + " car accidents in the past three years";
+      };
+                        // DUI condition
+      if (drivingDUI == "none" || "I never drive under the influence" || 0) {
+        speechOutput += ", you haven't had any DUI's";
+      } else {
+        speechOutput += ", you've had " + drivingDUI + " DUI's";
+      };
+                        //smoking condition
+      if (smoke == 'none' || "I don't smoke" || 0) {
+        speechOutput += ", and you don't smoke";
+      } else {
+        speechOutput += ", and you smoke " + smoke + " packs a day";
+      };
+      speechOutput += ". You're still a loser though. And judging by your voice you sound like you don't have any friends at all."
+      this.emit(":tell", speechOutput);
   },
-  'AMAZON.HelpIntent': function () {
-    speechOutput = '';
-    reprompt = '';
-    this.emit(':ask', speechOutput, reprompt);
-  },
-  'AMAZON.CancelIntent': function () {
-        speechOutput = "";
-        this.emit(':tell', speechOutput);
+  "AMAZON.HelpIntent": function() {
+      this.emit(':tell', reprompt);
     },
-    'AMAZON.StopIntent': function () {
-        speechOutput = "";
-        this.emit(':tell', speechOutput);
+  "AMAZON.StopIntent": function() {
+      this.emit(':tell', "Goodbye!");
     },
-    'SessionEndedRequest': function () {
-        var speechOutput = "";
-        this.emit(':tell', speechOutput);
+  "AMAZON.CancelIntent": function() {
+      this.emit(':tell', "Goodbye!");
     },
+  'SessionEndedRequest': function () {
+      console.log('session ended!');
+      //this.attributes['endedSessionCount'] += 1;
+      this.emit(":tell", "Goodbye!");
+    }
 };
-//
-// exports.handler = (event, context) => {
-//     var alexa = Alexa.handler(event, context);
-//     alexa.APP_ID = APP_ID;
-//     // To enable string internationalization (i18n) features, set a resources object.
-//     //alexa.resources = languageStrings;
-//     alexa.registerHandlers(handlers);
-//     alexa.execute();
-// };
-
-//    END of Intent Handlers {} ========================================================================================
-// 3. Helper Function  =================================================================================================
-
 function delegateSlotCollection(){
   console.log("in delegateSlotCollection");
   console.log("current dialogState: "+this.event.request.dialogState);
@@ -186,38 +143,6 @@ function isSlotValid(request, slotName){
     return false;
   }
 }
-
-// var newSessionHandlers = {
-//     'NewSession': function() {
-//         if(Object.keys(this.attributes).length === 0) {
-//             this.attributes['endedSessionCount'] = 0;
-//             this.attributes['gamesPlayed'] = 0;
-//         }
-//         this.handler.state = states.STARTMODE;
-//         this.emit(':ask', 'Welcome to your Days Left to Live calculator. You have played '
-//             + this.attributes['gamesPlayed'].toString() + ' times. would you like to play?',
-//             'Say yes to start the game or no to quit.');
-//     },
-//     "AMAZON.StopIntent": function() {
-//       this.emit(':tell', "Goodbye!");
-//     },
-//     "AMAZON.CancelIntent": function() {
-//       this.emit(':tell', "Goodbye!");
-//     },
-//     'SessionEndedRequest': function () {
-//         console.log('session ended!');
-//         //this.attributes['endedSessionCount'] += 1;
-//         this.emit(":tell", "Goodbye!");
-//     }
-// };
-//
-// var startGameHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
-//     'NewSession': function () {
-//         this.emit('NewSession'); // Uses the handler in newSessionHandlers
-//     },
-//     'SessionEndedRequest': function () {
-//         console.log("SESSIONENDEDREQUEST");
-//         //this.attributes['endedSessionCount'] += 1;
-//         this.emit(':tell', "Goodbye!");
-//     }
-// });
+function unhandled() {
+  console.log("suck my nut");
+}

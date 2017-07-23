@@ -16,7 +16,13 @@
       "name": "DaysLeftIntent",
       "samples": [
         "Yes",
-        "No"
+        "Yeah",
+        "Yup",
+        "Sure",
+        "No",
+        "Nope",
+        "No thanks",
+        "No way"
       ],
       "slots": [
         {
